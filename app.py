@@ -13,7 +13,23 @@ TWILIO_SID       = os.environ.get("TWILIO_SID", "")
 TWILIO_AUTH      = os.environ.get("TWILIO_AUTH", "")
 TWILIO_NUMBER    = os.environ.get("TWILIO_NUMBER", "whatsapp:+14155238886")  # Twilio sandbox number
 
-client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+# Validate API key on startup
+if not ANTHROPIC_API_KEY:
+    print("❌ CRITICAL: ANTHROPIC_API_KEY is not set! All analysis will fail.")
+else:
+    print(f"✅ Anthropic API key loaded ({ANTHROPIC_API_KEY[:12]}...)")
+
+if not TELEGRAM_TOKEN:
+    print("⚠️ WARNING: TELEGRAM_TOKEN is not set!")
+else:
+    print(f"✅ Telegram token loaded ({TELEGRAM_TOKEN[:10]}...)")
+
+client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
+
+def get_client():
+    if not client:
+        raise Exception("ANTHROPIC_API_KEY not configured. Please set it in Render environment variables.")
+    return client
 
 # ════════════════════════════════════════════════
 #  SHARED AI FUNCTIONS
@@ -21,7 +37,7 @@ client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
 def analyze_scam(message):
     try:
-        response = client.messages.create(
+        response = get_client().messages.create(
             model="claude-sonnet-4-20250514",
             max_tokens=400,
             messages=[{"role": "user", "content": f"""You are FinSentinel, an AI financial scam detector for India.
@@ -56,30 +72,38 @@ Rules:
 
 def check_upi(upi_id):
     try:
-        response = client.messages.create(
+        response = get_client().messages.create(
             model="claude-sonnet-4-20250514",
-            max_tokens=200,
-            messages=[{"role": "user", "content": f"""UPI fraud check for India. Analyze: {upi_id}
-Check for suspicious patterns: prize/winner/reward/lucky/refund/kyc/urgent/govt impersonation/wrong bank handle.
+            max_tokens=250,
+            messages=[{"role": "user", "content": f"""You are a UPI fraud expert in India. Analyze this UPI ID like a real expert warning a friend.
+
+UPI ID: {upi_id}
+
+Check for: prize/winner/reward/lucky/refund/kyc/urgent/govt impersonation/wrong bank handle/random numbers/fake names.
 
 Reply format:
-💳 *UPI CHECK: {upi_id}*
-[emoji] *Result: FRAUDULENT / SUSPICIOUS / LOOKS SAFE*
-📊 *Risk: X/100*
-⚠️ *Reason:* brief reason
-✅ *Tip:* one safety tip
-📞 *Report: 1930*
+💳 *UPI Check: {upi_id}*
+[emoji] *[FRAUDULENT / SUSPICIOUS / LOOKS SAFE]*
+📊 _Risk: X/100_
 
-Use 🚨 FRAUDULENT, ⚠️ SUSPICIOUS, ✅ LOOKS SAFE. Max 60 words."""}]
+[One sentence like a real person — e.g. "Yaar, 'prize' wala UPI ID kabhi genuine nahi hota."]
+
+⚠️ *Red flag:* [specific reason about THIS UPI ID]
+✅ *Advice:* [specific advice]
+
+📞 _Report fraud: 1930_
+
+Use 🚨 FRAUDULENT, ⚠️ SUSPICIOUS, ✅ LOOKS SAFE. Max 80 words. Sound human and warm."""}]
         )
         return response.content[0].text
-    except:
-        return "⚠️ Couldn't check UPI ID. If suspicious, *do not pay* and call *1930*."
+    except Exception as e:
+        print(f"UPI check error: {e}")
+        return "⚠️ UPI check failed. Please try again in a moment."
 
 
 def check_url(url):
     try:
-        response = client.messages.create(
+        response = get_client().messages.create(
             model="claude-sonnet-4-20250514",
             max_tokens=200,
             messages=[{"role": "user", "content": f"""Check if this URL is a phishing/scam link for India: {url}
@@ -301,7 +325,7 @@ def analyze_image(img_b64, caption=""):
                   f"📞 *Helpline: 1930*\n\n"
                   f"Use 🚨 SCAM, ⚠️ SUSPICIOUS, ✅ SAFE. Max 100 words.")
 
-        response = client.messages.create(
+        response = get_client().messages.create(
             model="claude-sonnet-4-20250514",
             max_tokens=350,
             messages=[{"role": "user", "content": [
