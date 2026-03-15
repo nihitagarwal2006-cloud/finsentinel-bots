@@ -1,126 +1,72 @@
-# FinSentinel — Telegram + WhatsApp Bot 🤖🛡️
+# FinSentinel Bot 🛡️
 
-One server, two bots. Built for India 🇮🇳
-
----
-
-## Setup Guide
-
-### Step 1 — Get Your Keys
-
-#### Telegram Bot Token (5 minutes)
-1. Open Telegram → search **@BotFather**
-2. Send `/newbot`
-3. Name: `FinSentinel`
-4. Username: `FinSentinelBot` (or any available name)
-5. BotFather gives you a token like:
-   `123456789:ABCdefGHIjklMNOpqrsTUVwxyz`
-6. Copy it ✅
-
-#### Twilio WhatsApp (10 minutes)
-1. Go to **twilio.com** → Sign up free
-2. Verify your phone number
-3. Go to **Console Dashboard** → copy:
-   - `Account SID`
-   - `Auth Token`
-4. Go to **Messaging → Try it out → Send a WhatsApp message**
-5. Note the sandbox number (e.g. `+14155238886`)
-6. **Join the sandbox** — send `join <word>` to that number on WhatsApp ✅
-
-#### Anthropic API Key
-1. Go to **console.anthropic.com**
-2. API Keys → Create Key
-3. Copy it ✅
+**India's Free AI-Powered Scam Detector**
 
 ---
 
-### Step 2 — Deploy on Render
+## What is this?
 
-1. Push this folder to a **new GitHub repo**
-   - Name: `finsentinel-bots`
-2. Go to **render.com** → New → Web Service
-3. Connect the repo
-4. Settings:
-   - Build: `pip install -r requirements.txt`
-   - Start: `gunicorn app:app`
-5. Add **Environment Variables**:
-
-| Key | Value |
-|-----|-------|
-| `ANTHROPIC_API_KEY` | your Anthropic key |
-| `TELEGRAM_TOKEN` | your Telegram bot token |
-| `TWILIO_SID` | your Twilio Account SID |
-| `TWILIO_AUTH` | your Twilio Auth Token |
-| `TWILIO_NUMBER` | `whatsapp:+14155238886` |
-
-6. Click **Deploy** → wait 2-3 min → get your URL ✅
+FinSentinel is a free bot that helps people in India detect financial scams instantly. Just send any suspicious message and get a verdict in seconds.
 
 ---
 
-### Step 3 — Connect Telegram
+## How to use
 
-1. Visit this URL in your browser:
-   ```
-   https://YOUR-RENDER-URL.onrender.com/setup?url=https://YOUR-RENDER-URL.onrender.com
-   ```
-2. You'll see: `✅ Telegram webhook set`
-3. Open Telegram → find your bot → send `/start` ✅
+**On Telegram:**
+Search **@FinSentinell_Bot** and send any suspicious message
 
----
-
-### Step 4 — Connect WhatsApp (Twilio)
-
-1. Go to Twilio → **Messaging → Settings → WhatsApp Sandbox Settings**
-2. Set **"When a message comes in"** webhook:
-   ```
-   https://YOUR-RENDER-URL.onrender.com/whatsapp
-   ```
-3. Method: **HTTP POST**
-4. Save ✅
-5. Send any message to the Twilio sandbox number on WhatsApp ✅
+**What you can send:**
+- Any suspicious SMS or WhatsApp message
+- A suspicious link or URL
+- A UPI ID you want to verify
+- A screenshot of a suspicious message
 
 ---
 
-## Test It!
+## What the bot does
 
-**Telegram:** Find your bot → send:
-```
-Congratulations! You won ₹50,000. Send Aadhaar to claim prize.
-```
-
-**WhatsApp:** Send to Twilio number:
-```
-URGENT: Your SBI KYC expires today. Click http://sbi-fake.xyz
-```
-
-Both should reply with full scam analysis! 🎉
+- Tells you if a message is a **SCAM, SUSPICIOUS or SAFE**
+- Shows you the **red flags** in the message
+- Gives you **safety tips**
+- Provides **bank helpline numbers** on request
 
 ---
 
-## What Both Bots Can Do
+## Commands
 
-| Feature | Works |
-|---------|-------|
-| Analyze scam text messages | ✅ |
-| Check suspicious URLs | ✅ |
-| Check UPI IDs for fraud | ✅ |
-| Analyze screenshot images | ✅ |
-| Show emergency helplines | ✅ |
-| Multi-language support | ✅ |
+| Command | What it does |
+|---------|-------------|
+| `hi` | Start the bot |
+| `helpline` | Get all bank fraud helplines |
+| `about` | Learn about FinSentinel |
 
----
-
-## Webhook URLs
-
-| Bot | Webhook URL |
-|-----|------------|
-| Telegram | `https://your-url.onrender.com/telegram` |
-| WhatsApp | `https://your-url.onrender.com/whatsapp` |
-| Health check | `https://your-url.onrender.com/` |
+Or just send any suspicious message directly — no commands needed!
 
 ---
 
-## Built By
-**Nihit & Anchal** 🇮🇳
-🌐 https://kaleidoscopic-pony-52e4b9.netlify.app
-📞 Cybercrime Helpline: 1930
+## Privacy
+
+- We do **not** store your messages
+- We do **not** collect personal information
+- Everything is analyzed and deleted instantly
+- 100% anonymous
+
+---
+
+## Emergency
+
+If you have been scammed, call immediately:
+
+📞 **National Cybercrime Helpline: 1930**
+🌐 **File a complaint: cybercrime.gov.in**
+
+---
+
+## About
+
+Built by **Nihit & Anchal** 🇮🇳
+
+Making India safer from financial fraud, one message at a time.
+
+🌐 Website: https://kaleidoscopic-pony-52e4b9.netlify.app
+🤖 Telegram: https://t.me/FinSentinell_Bot
